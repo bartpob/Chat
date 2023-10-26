@@ -1,0 +1,12 @@
+C:\Users\Bartek\Documents\repos\Chat\Connection\bin\Debug\net7.0\Connection.deps.json
+C:\Users\Bartek\Documents\repos\Chat\Connection\bin\Debug\net7.0\Connection.dll
+C:\Users\Bartek\Documents\repos\Chat\Connection\bin\Debug\net7.0\Connection.pdb
+C:\Users\Bartek\Documents\repos\Chat\Connection\obj\Debug\net7.0\Connection.csproj.AssemblyReference.cache
+C:\Users\Bartek\Documents\repos\Chat\Connection\obj\Debug\net7.0\Connection.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Bartek\Documents\repos\Chat\Connection\obj\Debug\net7.0\Connection.AssemblyInfoInputs.cache
+C:\Users\Bartek\Documents\repos\Chat\Connection\obj\Debug\net7.0\Connection.AssemblyInfo.cs
+C:\Users\Bartek\Documents\repos\Chat\Connection\obj\Debug\net7.0\Connection.csproj.CoreCompileInputs.cache
+C:\Users\Bartek\Documents\repos\Chat\Connection\obj\Debug\net7.0\Connection.dll
+C:\Users\Bartek\Documents\repos\Chat\Connection\obj\Debug\net7.0\refint\Connection.dll
+C:\Users\Bartek\Documents\repos\Chat\Connection\obj\Debug\net7.0\Connection.pdb
+C:\Users\Bartek\Documents\repos\Chat\Connection\obj\Debug\net7.0\ref\Connection.dll

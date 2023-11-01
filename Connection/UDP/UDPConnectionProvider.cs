@@ -17,6 +17,9 @@ namespace Connection.UDP
 
         private readonly UDPSender _udpSender;
         private readonly UDPReceiver _udpReceiver;
+
+
+        public event EventHandler<ReceivedDataEventArgs>? ReceivedData;
         public UDPConnectionProvider()
         {
             _socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
@@ -30,12 +33,22 @@ namespace Connection.UDP
             _socket.SendBufferSize = _sendBufferSize;
             _socket.ReceiveBufferSize = _receiveBufferSize;
             _udpSender = new UDPSender();
-            _udpReceiver = new UDPReceiver();
+            _udpReceiver = new UDPReceiver(_socket);
+
+            _udpReceiver.OnReceivedData += Receive;
         }
 
         public void Send(IUdpDatagram datagram)
         {
             _udpSender.Send(_socket, datagram, new IPEndPoint(_groupIPAddress,_port));
+        }
+
+        private void Receive(object? sender, ReceivedDataEventArgs e)
+        {
+            if (ReceivedData != null)
+            {
+                ReceivedData(this, e);
+            }
         }
         
     }

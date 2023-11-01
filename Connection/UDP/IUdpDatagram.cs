@@ -9,7 +9,5 @@ namespace Connection.UDP
     public interface IUdpDatagram
     {
         byte[] Encode();
-
-        IUdpDatagram Decode(byte[] data);
     }
 }

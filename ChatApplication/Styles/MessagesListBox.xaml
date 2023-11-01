@@ -1,0 +1,46 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:model="clr-namespace:ChatApplication.Models">
+    <DataTemplate x:Key="MessagesListBoxItemTemplate">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <TextBlock Foreground="#888888" FontFamily="Calibri" FontSize="10" HorizontalAlignment="Center" Grid.Row="0" Text="{Binding Date, StringFormat=dd MMMM yyyy HH:mm}"/>
+            <Border x:Name="border" Background="#F7EFE5" CornerRadius="15" Height="{Binding ActualHeight, ElementName=Text}" Margin="10" Grid.Row="1" Width="{Binding ActualWidth, ElementName=Text}"/>
+            <TextBlock x:Name="Text" Grid.Row="1" Style="{DynamicResource TextBlockMessageStyle}" Text="{Binding Text}"/>
+        </Grid>
+        <DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding Type}">
+                <DataTrigger.Value>
+                    <model:MessageType>Outgoing</model:MessageType>
+                </DataTrigger.Value>
+                <Setter Property="TextAlignment" TargetName="Text" Value="Right"/>
+                <Setter Property="HorizontalAlignment" TargetName="Text" Value="Right"/>
+                <Setter Property="HorizontalAlignment" TargetName="border" Value="Right"/>
+                <Setter Property="Background" TargetName="border" Value="#C3ACD0"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Type}">
+                <DataTrigger.Value>
+                    <model:MessageType>Incoming</model:MessageType>
+                </DataTrigger.Value>
+                <Setter Property="TextAlignment" TargetName="Text" Value="Left"/>
+                <Setter Property="HorizontalAlignment" TargetName="Text" Value="Left"/>
+                <Setter Property="HorizontalAlignment" TargetName="border" Value="Left"/>
+            </DataTrigger>
+        </DataTemplate.Triggers>
+    </DataTemplate>
+    <Style x:Key="ListBoxItemsContainerStyle" TargetType="{x:Type ListBoxItem}">
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListBoxItem">
+                    <Border Name="_Border" Padding="2" SnapsToDevicePixels="true">
+                        <ContentPresenter />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

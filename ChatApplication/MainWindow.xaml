@@ -1,0 +1,57 @@
+﻿<Window x:Class="ChatApplication.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        WindowStartupLocation="CenterScreen"
+        xmlns:local="clr-namespace:ChatApplication"
+        xmlns:vms="clr-namespace:ChatApplication.ViewModels"
+        xmlns:model="clr-namespace:ChatApplication.Models"
+        mc:Ignorable="d"
+        MinHeight="800" MinWidth="900"
+        Title="Chat" Height="800" Width="900">
+    <Window.DataContext>
+        <vms:MainViewModel />
+    </Window.DataContext>
+    <Grid SnapsToDevicePixels="True" Background="#F7EFE5">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="330" />
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+
+        <Border Background="#C3ACD0" Margin="10" CornerRadius="15" Grid.Column="0" Grid.Row="0" />
+        <Grid Grid.Column="0" Grid.Row="0" Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="60"/>
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <TextBlock Text="Chats" FontSize="36" VerticalAlignment="Center" FontFamily="Calibri" FontWeight="DemiBold" Foreground="#F7EFE5" 
+                       Margin="10 0 0 0"/>
+            <ListBox ItemTemplate="{DynamicResource UsersListBoxItemTemplate}" Grid.Row="1" Background="Transparent" ItemsSource="{Binding Users}" ItemContainerStyle="{StaticResource UsersListBoxItemsContainerStyle}"
+                     SelectedItem="{Binding SelectedUser}"
+                     BorderThickness="0" Margin="0 10 0 0">
+            </ListBox>
+        </Grid>
+
+        <Grid Grid.Column="1" Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="80"/>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="120"/>
+                </Grid.ColumnDefinitions>
+                <TextBox Style="{DynamicResource TextBoxMessageStyle}" Text="{Binding Message, UpdateSourceTrigger=PropertyChanged}" Grid.Column="0" Grid.Row="0" Margin="10 0 10 0" Height="60" AcceptsReturn="True"/>
+                <Button Style="{DynamicResource SendButtonStyle}" Grid.Column="1" Grid.Row="0" Content="Send" Height="60" Margin="10 0 10 0" Command="{Binding SendMessageCommand}"/>
+            </Grid>
+            <Border Grid.Column="0" Grid.Row="0" Background="#D5CDC3" Margin="10" CornerRadius="15"/>
+            <ListBox ItemContainerStyle="{DynamicResource ListBoxItemsContainerStyle}" ItemTemplate="{DynamicResource MessagesListBoxItemTemplate}" 
+                     Grid.Column="0" Grid.Row="0" Background="Transparent" BorderThickness="0" ItemsSource="{Binding Messages}" Margin="10" />
+        </Grid>
+    </Grid>
+</Window>

@@ -1,0 +1,53 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:model="clr-namespace:ChatApplication.Models">
+   
+    <DataTemplate x:Key="UsersListBoxItemTemplate">
+        <Border x:Name="border" Background="#D5CDC3" CornerRadius="15" Height="{Binding ActualHeight, ElementName=ItemGrid}" Margin="0 0 0 15" Width="{Binding ActualWidth, ElementName=ItemGrid}">
+            <Grid x:Name="ItemGrid" Height="60" Margin="0 0 0 20" Width="280">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="30"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.ColumnSpan="2" Foreground="#666666" FontFamily="Calibri" FontWeight="DemiBold" FontSize="18" HorizontalAlignment="Center" Text="{Binding Name}" VerticalAlignment="Center"/>
+                <Ellipse x:Name="StatusDot" Grid.Column="1" Fill="White" HorizontalAlignment="Center" Height="7" VerticalAlignment="Center" Width="7"/>
+            </Grid>
+        </Border>
+        <DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding Status}">
+                <DataTrigger.Value>
+                    <model:UserStatus>Online</model:UserStatus>
+                </DataTrigger.Value>
+                <Setter Property="Fill" TargetName="StatusDot" Value="#00CC00"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Status}">
+                <DataTrigger.Value>
+                    <model:UserStatus>Offline</model:UserStatus>
+                </DataTrigger.Value>
+                <Setter Property="Fill" TargetName="StatusDot" Value="#FF0000"/>
+            </DataTrigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="border" Property="Background" Value="#A18AB0" />
+            </Trigger>
+        </DataTemplate.Triggers>
+    </DataTemplate>
+
+    <Style x:Key="UsersListBoxItemsContainerStyle" TargetType="{x:Type ListBoxItem}">
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListBoxItem">
+                    <Grid>
+                        <Border x:Name="border" Panel.ZIndex="1" Opacity="0.4" Width="280" CornerRadius="15" Height="60" Margin="0 0 0 15"/>
+                        <ContentPresenter/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="#666666" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

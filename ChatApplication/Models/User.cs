@@ -14,8 +14,8 @@ namespace ChatApplication.Models
         public IPAddress Address { get; set; }
         public UserStatus Status { get; set; }
 
-        public IObservable<Message>? Messages { get; set; }
-        public User(string name, IPAddress address, ObservableCollection<Message>? messages,  UserStatus status = UserStatus.Online)
+        public List<Message>? Messages { get; set; }
+        public User(string name, IPAddress address, List<Message>? messages,  UserStatus status = UserStatus.Online)
         {
             Name = name;
             Address = address;

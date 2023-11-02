@@ -3,6 +3,7 @@ using ChatApplication.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -17,10 +18,11 @@ namespace ChatApplication.ViewModels
         private User? _selectedUser;
         private string? _message;
         private ObservableCollection<User>? _users;
+        private ObservableCollection<Message> _usersMessages;
 
         public ICommand SendMessageCommand { get; }
-        public IEnumerable<User>? Users => _users;
-        public IEnumerable<Message>? Messages => _selectedUser.Messages;
+        public IList<User>? Users => _users;
+        public IList<Message>? Messages => _usersMessages;
 
 
         public User? SelectedUser
@@ -32,6 +34,8 @@ namespace ChatApplication.ViewModels
             set
             {
                 _selectedUser = value;
+                _usersMessages = new(_selectedUser?.Messages ?? new());
+                _usersMessages.CollectionChanged += OnCollectionChanged;
                 OnPropertyChanged(nameof(SelectedUser));
                 OnPropertyChanged(nameof(Messages));
             }
@@ -53,11 +57,29 @@ namespace ChatApplication.ViewModels
 
         private void SendMessageCommandHandler(object? obj)
         {
-            _selectedUser.Messages.Add(new Models.Message(_message, MessageType.Outgoing, DateTime.Now));
-            OnPropertyChanged(nameof(SelectedUser));
+            _usersMessages.Add(new Models.Message(_message, MessageType.Outgoing, DateTime.Now));
+            _message = "";
+            OnPropertyChanged(nameof(Messages));
+            OnPropertyChanged(nameof(Message));
         }
 
         private bool CanSendMessage(object? obj) => !String.IsNullOrEmpty(_message);
+
+        private void OnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            switch(e.Action)
+            {
+                case NotifyCollectionChangedAction.Add:
+
+                    foreach(Message item in e.NewItems!)
+                    {
+                        _selectedUser?.Messages?.Add(item);
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
 
         public MainViewModel()
         {
@@ -73,12 +95,14 @@ namespace ChatApplication.ViewModels
                 "d;laskndsa;lkndsa;lkdnas;lkdnsal;kdnsalk;dnsal;kndas;lkndas;lkndsakl;dnas", MessageType.Outgoing, DateTime.Parse("23/07/2023 13:27")));
 
             _users = new();
-            _users.Add(new User("alfonso", IPAddress.Parse("192.168.1.1"), new(messages)));
-            _users.Add(new User("Bart", IPAddress.Parse("192.168.1.1"), null));
-            _users.Add(new User("Bart", IPAddress.Parse("192.168.1.1"), null));
-            _users.Add(new User("Bart", IPAddress.Parse("192.168.1.1"), null, UserStatus.Offline));
+            _users.Add(new User("alfonso", IPAddress.Parse("192.168.1.1"), messages));
+            _users.Add(new User("Bart", IPAddress.Parse("192.168.1.1"), new()));
+            _users.Add(new User("Bart", IPAddress.Parse("192.168.1.1"), new()));
+            _users.Add(new User("Bart", IPAddress.Parse("192.168.1.1"), new(), UserStatus.Offline));
 
             _selectedUser = _users.ElementAt(0);
+            _usersMessages = new(_selectedUser.Messages ?? new());
+            _usersMessages.CollectionChanged += OnCollectionChanged;
         }
     }
 }

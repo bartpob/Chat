@@ -4,15 +4,16 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Connection.Datagrams;
 using Connection.UDP;
 
 namespace Connection
 {
     public class ReceivedDataEventArgs : EventArgs
     {
-        private IUdpDatagram _datagram;
+       private DatagramBase _datagram;
 
-        public IUdpDatagram Datagram
+        public DatagramBase Datagram
         {
             get
             {
@@ -20,7 +21,7 @@ namespace Connection
             }
         }
 
-        public ReceivedDataEventArgs(IUdpDatagram datagram)
+        public ReceivedDataEventArgs(DatagramBase datagram)
         {
             _datagram = datagram;
         }

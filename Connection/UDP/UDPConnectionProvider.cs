@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Connection.Datagrams;
+using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Security.Cryptography;
@@ -9,7 +10,6 @@ namespace Connection.UDP
     {
         private Socket _socket;
         private readonly IPAddress _groupIPAddress = IPAddress.Parse("239.255.255.255");
-        private readonly IPAddress _localIPAddress = IPAddress.Parse("192.168.3.4");
 
         private readonly int _port = 8181;
         private readonly int _sendBufferSize = 1024;
@@ -18,37 +18,50 @@ namespace Connection.UDP
         private readonly UDPSender _udpSender;
         private readonly UDPReceiver _udpReceiver;
 
+        private readonly IPEndPoint _remoteEP;
 
-        public event EventHandler<ReceivedDataEventArgs>? ReceivedData;
+        public readonly IPAddress _localIPAddress;
+        public readonly string _hostName;
         public UDPConnectionProvider()
         {
             _socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+
+            _remoteEP = new IPEndPoint(_groupIPAddress, _port);
             
             _socket.SetSocketOption(SocketOptionLevel.Udp, SocketOptionName.NoDelay, true);
             _socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
             _socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.MulticastTimeToLive, true);
-            _socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership, new MulticastOption(_groupIPAddress, _localIPAddress));
+            _socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership, new MulticastOption(_groupIPAddress, _localIPAddress!));
             _socket.MulticastLoopback = false;
-            _socket.Bind(new IPEndPoint(_localIPAddress, _port));
+            _socket.Bind(new IPEndPoint(_localIPAddress!, _port));
             _socket.SendBufferSize = _sendBufferSize;
             _socket.ReceiveBufferSize = _receiveBufferSize;
-            _udpSender = new UDPSender();
+            _udpSender = new UDPSender(_remoteEP, _socket);
             _udpReceiver = new UDPReceiver(_socket);
-
-            _udpReceiver.OnReceivedData += Receive;
+            _localIPAddress = IPAddress.Parse(GetLocalIPAddress());
+            _hostName = GetHostName();
         }
 
-        public void Send(IUdpDatagram datagram)
+        public void Send(DatagramBase datagram, IPAddress? ipAddress = null)
         {
-            _udpSender.Send(_socket, datagram, new IPEndPoint(_groupIPAddress,_port));
-        }
-
-        private void Receive(object? sender, ReceivedDataEventArgs e)
-        {
-            if (ReceivedData != null)
+            if (ipAddress == null)
             {
-                ReceivedData(this, e);
+                _udpSender.SendMulticast(datagram);
             }
+            else
+            {
+                _udpSender.Send(datagram, new IPEndPoint(ipAddress, _port));
+            }
+        }
+
+        private string GetHostName()
+        {
+            return Dns.GetHostName() ?? "unavailable";
+        }
+
+        private string GetLocalIPAddress()
+        {
+            return Dns.GetHostEntry(GetHostName()).AddressList[0].ToString() ?? "0.0.0.0";
         }
         
     }

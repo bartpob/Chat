@@ -1,13 +1,22 @@
 ﻿using System;
 using System.Net;
 using System.Net.Sockets;
-
+using Connection.Datagrams;
 
 namespace Connection.UDP
 {
     internal class UDPSender
     {
-        public void Send(Socket socket, IUdpDatagram datagram, IPEndPoint EPRemote)
+        private readonly IPEndPoint _remoteEP;
+        private readonly Socket _socket;
+
+
+        public UDPSender(IPEndPoint remoteEP, Socket socket)
+        {
+            _remoteEP = remoteEP;
+            _socket = socket;
+        }
+        public void Send(DatagramBase datagram, IPEndPoint ep)
         {
             byte[] bytesToSend = datagram.Encode();
             int leftLen = bytesToSend.Length;
@@ -15,20 +24,25 @@ namespace Connection.UDP
 
             while (leftLen != 0)
             {
-                if (leftLen >= socket.SendBufferSize)
+                if (leftLen >= _socket.SendBufferSize)
                 {
-                    byte[] data = bytesToSend.Skip(sentLen).Take(socket.SendBufferSize).ToArray();
-                    socket.SendTo(data, EPRemote);
-                    sentLen += socket.SendBufferSize;
-                    leftLen -= socket.SendBufferSize;
+                    byte[] data = bytesToSend.Skip(sentLen).Take(_socket.SendBufferSize).ToArray();
+                    _socket.SendTo(data, _remoteEP);
+                    sentLen += _socket.SendBufferSize;
+                    leftLen -= _socket.SendBufferSize;
                 }
                 else
                 {
                     byte[] data = bytesToSend.Skip(sentLen).Take(leftLen).ToArray();
-                    socket.SendTo(data, EPRemote);
+                    _socket.SendTo(data, _remoteEP);
                     leftLen = 0;
                 }
             }
+        }
+
+        public void SendMulticast(DatagramBase datagram)
+        {
+            Send(datagram, _remoteEP);
         }
     }
 }

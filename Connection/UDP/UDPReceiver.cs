@@ -5,12 +5,13 @@ using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Collections.Generic;
+using Connection.Datagrams;
 
 namespace Connection.UDP
 {
     internal class UDPReceiver
     {
-        public event EventHandler<ReceivedDataEventArgs>? OnReceivedData;
+        public event EventHandler<ReceivedDataEventArgs>? ReceivedData;
         private readonly Socket _socket;
         private Thread? _listeningThread;
         public UDPReceiver(Socket socket)
@@ -50,11 +51,10 @@ namespace Connection.UDP
 
                     if(dataLength == 0)
                     {
-                        SimpleDatagram receivedDatagram = (SimpleDatagram)SimpleDatagram.Decode(bytes.ToArray());
-                        ReceivedDataEventArgs eventArgs = new(receivedDatagram);
-                        if (OnReceivedData != null)
+                        if(ReceivedData != null)
                         {
-                            OnReceivedData(this, eventArgs);
+                            var datagram = DatagramBase.Decode(bytes.ToArray());
+                            ReceivedData(this, new(datagram));
                         }
                         bytes.Clear();
                     }

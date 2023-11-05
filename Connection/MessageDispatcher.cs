@@ -40,7 +40,7 @@ namespace Connection
         {
             if (e.Datagram is UserStateDatagram userState)
             {
-                if(userState.Status != UserStatus.Offline)
+                if (userState.Status != UserStatus.Offline && userState.AllowingResponse == AllowingResponse.Allowed)
                 {
                     SendState(UserStatus.Online, AllowingResponse.NotAllowed);
                 }

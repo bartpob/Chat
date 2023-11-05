@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Connection.Datagrams;
 
 namespace ChatApplication.Models
 {
@@ -24,10 +25,4 @@ namespace ChatApplication.Models
         }
         
     }
-
-    enum UserStatus
-    {
-        Online,
-        Offline
-    };
 }

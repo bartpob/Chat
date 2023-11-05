@@ -10,9 +10,6 @@
         mc:Ignorable="d"
         MinHeight="800" MinWidth="900"
         Title="Chat" Height="800" Width="900">
-    <Window.DataContext>
-        <vms:MainViewModel />
-    </Window.DataContext>
     <Grid SnapsToDevicePixels="True" Background="#F7EFE5">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="330" />

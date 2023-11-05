@@ -6,12 +6,17 @@ using Connection.Datagrams;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Text;
 
-UserStateDatagram dg = new(UserStatus.Online, IPAddress.Parse("129.12.12.12"), "dupkasz");
+UDPConnectionProvider cp = new();
+MessageDispatcher md = new(cp);
 
-var x = dg.Encode();
+md.ReceivedUserState += rec;
+void rec(object? sender, ReceivedDataEventArgs e)
+{
+    if (e.Datagram is UserStateDatagram u)
+    {
+        Console.WriteLine($"{u.HostName}, {u.IPAddr}, {u.Status}");
+    }
+}
 
-var y = Encoding.UTF8.GetString(x.Skip(4).ToArray());
 
-UserStateDatagram b = (UserStateDatagram)DatagramBase.Decode(x);
-Console.WriteLine("xx");
-
+while (true) ;

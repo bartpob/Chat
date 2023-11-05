@@ -7,14 +7,27 @@
   "targets": {
     ".NETCoreApp,Version=v7.0": {
       "ChatApplication/1.0.0": {
+        "dependencies": {
+          "Connection": "1.0.0"
+        },
         "runtime": {
           "ChatApplication.dll": {}
+        }
+      },
+      "Connection/1.0.0": {
+        "runtime": {
+          "Connection.dll": {}
         }
       }
     }
   },
   "libraries": {
     "ChatApplication/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Connection/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

@@ -1,11 +1,30 @@
 {
   "version": 3,
   "targets": {
-    "net7.0-windows7.0": {}
+    "net7.0-windows7.0": {
+      "Connection/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v7.0",
+        "compile": {
+          "bin/placeholder/Connection.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Connection.dll": {}
+        }
+      }
+    }
   },
-  "libraries": {},
+  "libraries": {
+    "Connection/1.0.0": {
+      "type": "project",
+      "path": "../Connection/Connection.csproj",
+      "msbuildProject": "../Connection/Connection.csproj"
+    }
+  },
   "projectFileDependencyGroups": {
-    "net7.0-windows7.0": []
+    "net7.0-windows7.0": [
+      "Connection >= 1.0.0"
+    ]
   },
   "packageFolders": {
     "C:\\Users\\Bartek\\.nuget\\packages\\": {}
@@ -33,7 +52,11 @@
       "frameworks": {
         "net7.0-windows7.0": {
           "targetAlias": "net7.0-windows",
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Users\\Bartek\\Documents\\repos\\Chat\\Connection\\Connection.csproj": {
+              "projectPath": "C:\\Users\\Bartek\\Documents\\repos\\Chat\\Connection\\Connection.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

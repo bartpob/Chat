@@ -1,6 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:model="clr-namespace:ChatApplication.Models">
+                    xmlns:model="clr-namespace:ChatApplication.Models"
+                    xmlns:dgs="clr-namespace:Connection.Datagrams;assembly=Connection">
    
     <DataTemplate x:Key="UsersListBoxItemTemplate">
         <Border x:Name="border" Background="#D5CDC3" CornerRadius="15" Height="{Binding ActualHeight, ElementName=ItemGrid}" Margin="0 0 0 15" Width="{Binding ActualWidth, ElementName=ItemGrid}">
@@ -16,13 +17,13 @@
         <DataTemplate.Triggers>
             <DataTrigger Binding="{Binding Status}">
                 <DataTrigger.Value>
-                    <model:UserStatus>Online</model:UserStatus>
+                    <dgs:UserStatus>Online</dgs:UserStatus>
                 </DataTrigger.Value>
                 <Setter Property="Fill" TargetName="StatusDot" Value="#00CC00"/>
             </DataTrigger>
             <DataTrigger Binding="{Binding Status}">
                 <DataTrigger.Value>
-                    <model:UserStatus>Offline</model:UserStatus>
+                    <dgs:UserStatus>Offline</dgs:UserStatus>
                 </DataTrigger.Value>
                 <Setter Property="Fill" TargetName="StatusDot" Value="#FF0000"/>
             </DataTrigger>

@@ -13,13 +13,16 @@ namespace Connection
     {
         private readonly UDPConnectionProvider _connectionProvider;
 
-        private EventHandler<ReceivedDataEventArgs>? ReceivedUserState;
+        public EventHandler<ReceivedDataEventArgs>? ReceivedUserState;
 
         public MessageDispatcher(UDPConnectionProvider connectionProvider)
         {
             _connectionProvider = connectionProvider;
 
             _connectionProvider.ReceivedData += ReceivedDatagramEventHandler;
+
+
+            SendState(UserStatus.Online);
         }
 
         public void Send(DatagramBase datagram, IPAddress? ipAddress = null)
@@ -27,11 +30,20 @@ namespace Connection
             _connectionProvider.Send(datagram, ipAddress);
         }
 
+        public void SendState(UserStatus status = UserStatus.Online)
+        {
+            Send(new UserStateDatagram(status, _connectionProvider.LocalIPAddress, _connectionProvider.HostName));
+        }
+
 
         private void ReceivedDatagramEventHandler(object? sender, ReceivedDataEventArgs e)
         {
             if (e.Datagram is UserStateDatagram userState)
             {
+                if(userState.Status != UserStatus.Offline)
+                {
+                    SendState();
+                }
                 if (ReceivedUserState != null)
                 {
                     ReceivedUserState(this, e);

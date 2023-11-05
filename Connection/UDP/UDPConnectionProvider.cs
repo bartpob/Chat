@@ -20,12 +20,15 @@ namespace Connection.UDP
 
         private readonly IPEndPoint _remoteEP;
 
-        public readonly IPAddress _localIPAddress;
-        public readonly string _hostName;
+        public readonly IPAddress LocalIPAddress;
+        public readonly string HostName;
 
         public EventHandler<ReceivedDataEventArgs>? ReceivedData;
         public UDPConnectionProvider()
         {
+            LocalIPAddress = IPAddress.Parse(GetLocalIPAddress());
+            HostName = GetHostName();
+
             _socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 
             _remoteEP = new IPEndPoint(_groupIPAddress, _port);
@@ -33,15 +36,13 @@ namespace Connection.UDP
             _socket.SetSocketOption(SocketOptionLevel.Udp, SocketOptionName.NoDelay, true);
             _socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
             _socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.MulticastTimeToLive, true);
-            _socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership, new MulticastOption(_groupIPAddress, _localIPAddress!));
+            _socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership, new MulticastOption(_groupIPAddress, LocalIPAddress!));
             _socket.MulticastLoopback = false;
-            _socket.Bind(new IPEndPoint(_localIPAddress!, _port));
+            _socket.Bind(new IPEndPoint(LocalIPAddress!, _port));
             _socket.SendBufferSize = _sendBufferSize;
             _socket.ReceiveBufferSize = _receiveBufferSize;
             _udpSender = new UDPSender(_remoteEP, _socket);
             _udpReceiver = new UDPReceiver(_socket);
-            _localIPAddress = IPAddress.Parse(GetLocalIPAddress());
-            _hostName = GetHostName();
 
             _udpReceiver.ReceivedData += ReceivedDataEventHandler;
         }
@@ -73,7 +74,15 @@ namespace Connection.UDP
 
         private string GetLocalIPAddress()
         {
-            return Dns.GetHostEntry(GetHostName()).AddressList[0].ToString() ?? "0.0.0.0";
+            var host = Dns.GetHostEntry(Dns.GetHostName());
+            foreach (var ip in host.AddressList)
+            {
+                if (ip.AddressFamily == AddressFamily.InterNetwork)
+                {
+                    return ip.ToString();
+                }
+            }
+            throw new Exception("No network adapters with an IPv4 address in the system!");
         }
         
     }

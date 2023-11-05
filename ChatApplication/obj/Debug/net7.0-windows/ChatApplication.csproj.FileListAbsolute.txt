@@ -26,3 +26,6 @@ C:\Users\Bartek\Documents\repos\Chat\ChatApplication\obj\Debug\net7.0-windows\Ge
 C:\Users\Bartek\Documents\repos\Chat\ChatApplication\obj\Debug\net7.0-windows\Styles\TextBlockMessageStyle.baml
 C:\Users\Bartek\Documents\repos\Chat\ChatApplication\obj\Debug\net7.0-windows\Styles\MessagesListBox.baml
 C:\Users\Bartek\Documents\repos\Chat\ChatApplication\obj\Debug\net7.0-windows\Styles\UsersListBox.baml
+C:\Users\Bartek\Documents\repos\Chat\ChatApplication\bin\Debug\net7.0-windows\Connection.dll
+C:\Users\Bartek\Documents\repos\Chat\ChatApplication\bin\Debug\net7.0-windows\Connection.pdb
+C:\Users\Bartek\Documents\repos\Chat\ChatApplication\obj\Debug\net7.0-windows\ChatApplication.csproj.CopyComplete

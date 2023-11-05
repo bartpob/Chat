@@ -1,5 +1,7 @@
 ﻿using ChatApplication.Commands;
 using ChatApplication.Models;
+using Connection;
+using Connection.Datagrams;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -15,9 +17,11 @@ namespace ChatApplication.ViewModels
     class MainViewModel : ViewModelBase
     {
 
+        private readonly MessageDispatcher _messageDispatcher;
+
         private User? _selectedUser;
         private string? _message;
-        private ObservableCollection<User>? _users;
+        private ObservableCollection<User> _users;
         private ObservableCollection<Message> _usersMessages;
 
         public ICommand SendMessageCommand { get; }
@@ -59,9 +63,7 @@ namespace ChatApplication.ViewModels
         {
             _usersMessages.Add(new Models.Message(_message, MessageType.Outgoing, DateTime.Now));
             _message = "";
-           // OnPropertyChanged(nameof(Messages));
            OnPropertyChanged(nameof(Message));
-            _users.Add(new User("bla", IPAddress.Parse("192.1.1.1"), null));
         }
 
         private bool CanSendMessage(object? obj) => !String.IsNullOrEmpty(_message);
@@ -82,28 +84,30 @@ namespace ChatApplication.ViewModels
             }
         }
 
-        public MainViewModel()
+        private void ReceivedUserStateEventHandler(object? sender, ReceivedDataEventArgs a)
+        {
+            UserStateDatagram userState = (UserStateDatagram)a.Datagram;
+
+            switch(userState.Status)
+            {
+                case UserStatus.Online:
+                    _users.Add(new User(userState.HostName, userState.IPAddr, new()));
+                    break;
+                case UserStatus.Offline:
+                    _users.Where(n => n.Address == userState.IPAddr).FirstOrDefault()!.Status = userState.Status;
+                    break;
+            }
+        }
+
+        public MainViewModel(MessageDispatcher messageDispatcher)
         {
             SendMessageCommand = new RelayCommand(SendMessageCommandHandler, CanSendMessage);
             List<Message> messages = new();
-            messages.Add(new Message("Witam", MessageType.Outgoing, DateTime.Parse("23/07/2023 13:27")));
-            messages.Add(new Message("Dzień dobry", MessageType.Incoming, DateTime.Parse("23/07/2023 13:27")));
-            messages.Add(new Message("Co słychać?", MessageType.Outgoing, DateTime.Parse("23/07/2023 13:27")));
-            messages.Add(new Message("Aaa wszystko git a u ciebie?", MessageType.Incoming, DateTime.Parse("23/07/2023 13:27")));
-            messages.Add(new Message("A też, dzięki że pytasz;laksjnd;alskdnas;lkdnas;lkdnas;lkdnas;lkdsan;kldasnd;laskndasn;ldsankd;aslkndas;lkdsan;asndlksandas;lkdnas;ldnas;lkdnsa;lkdsa" +
-                ";aldksjndas;lkndas;lkdnsakl;dnaskl;dnas;knldasnkldasnkl;" +
-                "da/klsndsa;lkdnsa;dnsa;lkdnas;lkdnas;lkdnas;lkdnas;kldnas;lkdnsa" +
-                "d;laskndsa;lkndsa;lkdnas;lkdnsal;kdnsalk;dnsal;kndas;lkndas;lkndsakl;dnas", MessageType.Outgoing, DateTime.Parse("23/07/2023 13:27")));
-
-            _users = new();
-            _users.Add(new User("alfonso", IPAddress.Parse("192.168.1.1"), messages));
-            _users.Add(new User("Bart", IPAddress.Parse("192.168.1.1"), new()));
-            _users.Add(new User("Bart", IPAddress.Parse("192.168.1.1"), new()));
-            _users.Add(new User("Bart", IPAddress.Parse("192.168.1.1"), new(), UserStatus.Offline));
-
-            _selectedUser = _users.ElementAt(0);
-            _usersMessages = new(_selectedUser.Messages ?? new());
+            _messageDispatcher = messageDispatcher;
+            _usersMessages = new(_selectedUser?.Messages ?? new());
             _usersMessages.CollectionChanged += OnCollectionChanged;
+            _users = new();
+            _messageDispatcher.ReceivedUserState += ReceivedUserStateEventHandler;
         }
     }
 }

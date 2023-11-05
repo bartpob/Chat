@@ -22,6 +22,8 @@ namespace Connection.UDP
 
         public readonly IPAddress _localIPAddress;
         public readonly string _hostName;
+
+        public EventHandler<ReceivedDataEventArgs>? ReceivedData;
         public UDPConnectionProvider()
         {
             _socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
@@ -40,6 +42,8 @@ namespace Connection.UDP
             _udpReceiver = new UDPReceiver(_socket);
             _localIPAddress = IPAddress.Parse(GetLocalIPAddress());
             _hostName = GetHostName();
+
+            _udpReceiver.ReceivedData += ReceivedDataEventHandler;
         }
 
         public void Send(DatagramBase datagram, IPAddress? ipAddress = null)
@@ -51,6 +55,14 @@ namespace Connection.UDP
             else
             {
                 _udpSender.Send(datagram, new IPEndPoint(ipAddress, _port));
+            }
+        }
+
+        private void ReceivedDataEventHandler(object? sender, ReceivedDataEventArgs e)
+        {
+            if(ReceivedData != null)
+            {
+                ReceivedData(this, e);
             }
         }
 

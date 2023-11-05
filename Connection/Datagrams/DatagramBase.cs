@@ -9,21 +9,21 @@ namespace Connection.Datagrams
     public class DatagramBase
     {
 
-        private JsonSerializerOptions _options = new JsonSerializerOptions { WriteIndented = true };
+        private readonly JsonSerializerOptions _options = new JsonSerializerOptions { WriteIndented = true };
         public byte[] Encode()
         {
-            string serialized = JsonSerializer.Serialize(this, _options);
-            int len = serialized.Length;
-            List<byte> bytes = BitConverter.GetBytes(len).ToList();
-            bytes.AddRange(Encoding.UTF8.GetBytes(serialized));
-            return bytes.ToArray();
+            string Serialized = JsonSerializer.Serialize(this, _options);
+            int len = Serialized.Length;
+            List<byte> Bytes = BitConverter.GetBytes(len).ToList();
+            Bytes.AddRange(Encoding.UTF8.GetBytes(Serialized));
+            return Bytes.ToArray();
         }
 
-        public static DatagramBase Decode(byte[] data)
+        public static DatagramBase Decode(byte[] Data)
         {
-            var deserialized = JsonSerializer.Deserialize<DatagramBase>(Encoding.UTF8.GetString(data.Skip(4).ToArray()));
+            var Deserialized = JsonSerializer.Deserialize<DatagramBase>(Encoding.UTF8.GetString(Data.Skip(4).ToArray()));
 
-            return deserialized ?? throw new Exception("Error in data transmission");
+            return Deserialized ?? throw new Exception("Error in data transmission");
         }
     }
 }

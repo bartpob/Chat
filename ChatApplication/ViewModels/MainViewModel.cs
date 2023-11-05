@@ -59,8 +59,9 @@ namespace ChatApplication.ViewModels
         {
             _usersMessages.Add(new Models.Message(_message, MessageType.Outgoing, DateTime.Now));
             _message = "";
-            OnPropertyChanged(nameof(Messages));
-            OnPropertyChanged(nameof(Message));
+           // OnPropertyChanged(nameof(Messages));
+           OnPropertyChanged(nameof(Message));
+            _users.Add(new User("bla", IPAddress.Parse("192.1.1.1"), null));
         }
 
         private bool CanSendMessage(object? obj) => !String.IsNullOrEmpty(_message);

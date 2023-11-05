@@ -30,9 +30,9 @@ namespace Connection
             _connectionProvider.Send(datagram, ipAddress);
         }
 
-        public void SendState(UserStatus status = UserStatus.Online)
+        public void SendState(UserStatus status = UserStatus.Online, AllowingResponse allowingResponse = AllowingResponse.Allowed)
         {
-            Send(new UserStateDatagram(status, _connectionProvider.LocalIPAddress, _connectionProvider.HostName));
+            Send(new UserStateDatagram(status, _connectionProvider.LocalIPAddress, _connectionProvider.HostName, allowingResponse));
         }
 
 
@@ -42,7 +42,7 @@ namespace Connection
             {
                 if(userState.Status != UserStatus.Offline)
                 {
-                    SendState();
+                    SendState(UserStatus.Online, AllowingResponse.NotAllowed);
                 }
                 if (ReceivedUserState != null)
                 {

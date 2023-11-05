@@ -10,15 +10,19 @@ namespace Connection.Datagrams
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public UserStatus Status { get; set; }
 
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public AllowingResponse AllowingResponse { get; set; }
+
         [JsonConverter(typeof(JsonStringIPAddressConverter))]
         public IPAddress IPAddr { get; set; }
         public string HostName { get; set; }
 
-        public UserStateDatagram(UserStatus status, IPAddress iPAddr, string hostName)
+        public UserStateDatagram(UserStatus status, IPAddress iPAddr, string hostName, AllowingResponse allowingResponse)
         {
             Status = status;
             IPAddr = iPAddr;
             HostName = hostName;
+            AllowingResponse = allowingResponse;
         }
     }
 
@@ -26,6 +30,12 @@ namespace Connection.Datagrams
     {
         Online,
         Offline
+    };
+    
+    public enum AllowingResponse
+    {
+        Allowed,
+        NotAllowed
     };
 
 

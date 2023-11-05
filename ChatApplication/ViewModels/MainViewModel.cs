@@ -91,10 +91,13 @@ namespace ChatApplication.ViewModels
             switch(userState.Status)
             {
                 case UserStatus.Online:
-                    _users.Add(new User(userState.HostName, userState.IPAddr, new()));
+                    App.Current.Dispatcher.Invoke((Action)delegate { _users.Add(new User(userState.HostName, userState.IPAddr, new())); });
+                    
                     break;
                 case UserStatus.Offline:
-                    _users.Where(n => n.Address == userState.IPAddr).FirstOrDefault()!.Status = userState.Status;
+                    App.Current.Dispatcher.Invoke((Action)delegate {
+                        _users.Where(n => n.Address == userState.IPAddr).FirstOrDefault()!.Status = userState.Status;
+                    });
                     break;
             }
         }

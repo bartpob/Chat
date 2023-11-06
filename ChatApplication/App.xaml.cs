@@ -10,6 +10,7 @@ using ChatApplication.ViewModels;
 using Connection;
 using Connection.UDP;
 using Connection.Datagrams;
+using System.Windows.Navigation;
 
 namespace ChatApplication
 {

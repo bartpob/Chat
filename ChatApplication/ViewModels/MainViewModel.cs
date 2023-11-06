@@ -91,12 +91,31 @@ namespace ChatApplication.ViewModels
             switch(userState.Status)
             {
                 case UserStatus.Online:
-                    App.Current.Dispatcher.Invoke((Action)delegate { _users.Add(new User(userState.HostName, userState.IPAddr, new())); });
+                    App.Current.Dispatcher.Invoke((Action)delegate 
+                     {
+                         var user = _users.FirstOrDefault(x => x.Address.ToString() == userState.IPAddr.ToString());
+                         if (user != null)
+                         {
+                             _users[_users.IndexOf(user)] = new User(userState.HostName, userState.IPAddr, new());
+                         }
+                         else
+                         {
+                             _users.Add(new User(userState.HostName, userState.IPAddr, new()));
+                         }
+                     });
                     
                     break;
                 case UserStatus.Offline:
-                    App.Current.Dispatcher.Invoke((Action)delegate {
-                        _users.Where(n => n.Address == userState.IPAddr).FirstOrDefault()!.Status = userState.Status;
+                   App.Current.Dispatcher.Invoke((Action)delegate 
+                   {
+                        foreach(var user in _users)
+                        {
+                           if(user.Address.ToString() == userState.IPAddr.ToString())
+                           {
+                               _users[_users.IndexOf(user)] = new User(user.Name, user.Address, user.Messages, UserStatus.Offline);
+                               break;
+                           }
+                        }
                     });
                     break;
             }
@@ -111,6 +130,8 @@ namespace ChatApplication.ViewModels
             _usersMessages.CollectionChanged += OnCollectionChanged;
             _users = new();
             _messageDispatcher.ReceivedUserState += ReceivedUserStateEventHandler;
+
+            _messageDispatcher.Run();
         }
     }
 }

@@ -20,8 +20,10 @@ namespace Connection
             _connectionProvider = connectionProvider;
 
             _connectionProvider.ReceivedData += ReceivedDatagramEventHandler;
+        }
 
-
+        public void Run()
+        {
             SendState(UserStatus.Online);
         }
 

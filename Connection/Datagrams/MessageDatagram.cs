@@ -14,8 +14,10 @@ namespace Connection.Datagrams
         [JsonConverter(typeof(JsonStringIPAddressConverter))]
         public IPAddress FromIPAddr { get; set; }
         public string Text { get; set; }
-        
+
+        [JsonConverter(typeof(JsonStringDateTimeConverter))]
         public DateTime Date { get; set; }
+
 
         public MessageDatagram(IPAddress from, string text, DateTime date)
         {

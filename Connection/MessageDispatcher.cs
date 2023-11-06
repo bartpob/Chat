@@ -14,7 +14,15 @@ namespace Connection
         private readonly UDPConnectionProvider _connectionProvider;
 
         public EventHandler<ReceivedDataEventArgs>? ReceivedUserState;
+        public EventHandler<ReceivedDataEventArgs>? ReceivedMessage;
 
+        public IPAddress IPAddr
+        {
+            get
+            {
+                return _connectionProvider.LocalIPAddress;
+            }
+        }
         public MessageDispatcher(UDPConnectionProvider connectionProvider)
         {
             _connectionProvider = connectionProvider;
@@ -49,6 +57,14 @@ namespace Connection
                 if (ReceivedUserState != null)
                 {
                     ReceivedUserState(this, e);
+                }
+            }
+
+            if(e.Datagram is MessageDatagram messageDatagram)
+            {
+                if(ReceivedMessage != null)
+                {
+                    ReceivedMessage(this, e);
                 }
             }
         }

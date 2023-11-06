@@ -6,6 +6,7 @@ namespace Connection.Datagrams
 {
     [JsonDerivedType(typeof(DatagramBase), typeDiscriminator: "Base")]
     [JsonDerivedType(typeof(UserStateDatagram), typeDiscriminator: "UserState")]
+    [JsonDerivedType(typeof(MessageDatagram), typeDiscriminator: "Message")]
     public class DatagramBase
     {
 

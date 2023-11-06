@@ -62,6 +62,7 @@ namespace ChatApplication.ViewModels
         private void SendMessageCommandHandler(object? obj)
         {
             _usersMessages.Add(new Models.Message(_message, MessageType.Outgoing, DateTime.Now));
+            _messageDispatcher.Send(new MessageDatagram(_messageDispatcher.IPAddr, _message, DateTime.Now));
             _message = "";
            OnPropertyChanged(nameof(Message));
         }
@@ -96,7 +97,7 @@ namespace ChatApplication.ViewModels
                          var user = _users.FirstOrDefault(x => x.Address.ToString() == userState.IPAddr.ToString());
                          if (user != null)
                          {
-                             _users[_users.IndexOf(user)] = new User(userState.HostName, userState.IPAddr, new());
+                             _users[_users.IndexOf(user)] = new User(userState.HostName, userState.IPAddr, user.Messages);
                          }
                          else
                          {
@@ -119,6 +120,17 @@ namespace ChatApplication.ViewModels
                     });
                     break;
             }
+        }
+
+        private void ReceivedMessageEventHandler(object? sender, ReceivedDataEventArgs e)
+        {
+            MessageDatagram message = (MessageDatagram)e.Datagram;
+
+            App.Current.Dispatcher.Invoke((Action)delegate
+            {
+                _users.Where(x => x.Address.ToString() == message.FromIPAddr.ToString()).FirstOrDefault().Messages.Add(new Message(
+                    message.Text, MessageType.Incoming, message.Date));
+            });
         }
 
         public MainViewModel(MessageDispatcher messageDispatcher)

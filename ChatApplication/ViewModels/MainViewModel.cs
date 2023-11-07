@@ -22,11 +22,10 @@ namespace ChatApplication.ViewModels
         private User? _selectedUser;
         private string? _message;
         private ObservableCollection<User> _users;
-        private ObservableCollection<Message> _usersMessages;
 
         public ICommand SendMessageCommand { get; }
         public IList<User>? Users => _users;
-        public IList<Message>? Messages => _usersMessages;
+        public IList<Message>? Messages => _selectedUser?.Messages;
 
 
         public User? SelectedUser
@@ -38,8 +37,6 @@ namespace ChatApplication.ViewModels
             set
             {
                 _selectedUser = value;
-                _usersMessages = new(_selectedUser?.Messages ?? new());
-                _usersMessages.CollectionChanged += OnCollectionChanged;
                 OnPropertyChanged(nameof(SelectedUser));
                 OnPropertyChanged(nameof(Messages));
             }
@@ -61,64 +58,33 @@ namespace ChatApplication.ViewModels
 
         private void SendMessageCommandHandler(object? obj)
         {
-            _usersMessages.Add(new Message(_message!, MessageType.Outgoing, DateTime.Now));
-            _messageDispatcher.Send(new MessageDatagram(_messageDispatcher.IPAddr, _message, DateTime.Now));
+            _selectedUser!.Messages.Add(new Message(_message!, MessageType.Outgoing, DateTime.Now));
+            _messageDispatcher.Send(new MessageDatagram(_messageDispatcher.IPAddr, _message!, DateTime.Now));
             _message = "";
            OnPropertyChanged(nameof(Message));
         }
 
-        private bool CanSendMessage(object? obj) => !String.IsNullOrEmpty(_message);
+        private bool CanSendMessage(object? obj) => !String.IsNullOrEmpty(_message) && _selectedUser != null;
 
-        private void OnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        private void ReceivedUserStateEventHandler(object? sender, ReceivedDataEventArgs e)
         {
-            switch(e.Action)
+            UserStateDatagram userState = (UserStateDatagram)e.Datagram;
+            var user = _users.FirstOrDefault(x => x.Address.ToString() == userState.IPAddr.ToString());
+            
+            if(user != null)
             {
-                case NotifyCollectionChangedAction.Add:
-
-                    foreach(Message item in e.NewItems!)
-                    {
-                        _selectedUser?.Messages?.Add(item);
-                    }
-                    break;
-                default:
-                    break;
+                if(userState.Status == UserStatus.Online)
+                {
+                    _users[_users.IndexOf(user)] = new User(userState.HostName, userState.IPAddr, user.Messages);
+                }
+                else
+                {
+                    _users[_users.IndexOf(user)] = new User(user.Name, user.Address, user.Messages, UserStatus.Offline);
+                }
             }
-        }
-
-        private void ReceivedUserStateEventHandler(object? sender, ReceivedDataEventArgs a)
-        {
-            UserStateDatagram userState = (UserStateDatagram)a.Datagram;
-
-            switch(userState.Status)
+            else
             {
-                case UserStatus.Online:
-                    App.Current.Dispatcher.Invoke((Action)delegate 
-                     {
-                         var user = _users.FirstOrDefault(x => x.Address.ToString() == userState.IPAddr.ToString());
-                         if (user != null)
-                         {
-                             _users[_users.IndexOf(user)] = new User(userState.HostName, userState.IPAddr, user.Messages);
-                         }
-                         else
-                         {
-                             _users.Add(new User(userState.HostName, userState.IPAddr, new()));
-                         }
-                     });
-                    
-                    break;
-                case UserStatus.Offline:
-                   App.Current.Dispatcher.Invoke((Action)delegate 
-                   {
-                        foreach(var user in _users)
-                        {
-                           if(user.Address.ToString() == userState.IPAddr.ToString())
-                           {
-                               _users[_users.IndexOf(user)] = new User(user.Name, user.Address, user.Messages, UserStatus.Offline);
-                               break;
-                           }
-                        }
-                    });
-                    break;
+                _users.Add(new User(userState.HostName, userState.IPAddr, new()));
             }
         }
 
@@ -135,15 +101,11 @@ namespace ChatApplication.ViewModels
 
         public MainViewModel(MessageDispatcher messageDispatcher)
         {
-            SendMessageCommand = new RelayCommand(SendMessageCommandHandler, CanSendMessage);
-            List<Message> messages = new();
-            _messageDispatcher = messageDispatcher;
-            _usersMessages = new(_selectedUser?.Messages ?? new());
-            _usersMessages.CollectionChanged += OnCollectionChanged;
             _users = new();
+            SendMessageCommand = new RelayCommand(SendMessageCommandHandler, CanSendMessage);
+            _messageDispatcher = messageDispatcher;
             _messageDispatcher.ReceivedUserState += ReceivedUserStateEventHandler;
             _messageDispatcher.ReceivedMessage += ReceivedMessageEventHandler;
-
             _messageDispatcher.Run();
         }
     }

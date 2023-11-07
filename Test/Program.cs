@@ -6,17 +6,9 @@ using Connection.Datagrams;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Text;
 
-UDPConnectionProvider cp = new();
-MessageDispatcher md = new(cp);
-
-md.ReceivedUserState += rec;
-void rec(object? sender, ReceivedDataEventArgs e)
-{
-    if (e.Datagram is UserStateDatagram u)
-    {
-        Console.WriteLine($"{u.HostName}, {u.IPAddr}, {u.Status}");
-    }
-}
+MessageDatagram x = new MessageDatagram(IPAddress.Parse("127.1.1.1"), "witam", DateTime.Now);
+var enc = x.Encode();
+var dec = DatagramBase.Decode(enc.Skip(4).ToArray());
 
 
 while (true) ;

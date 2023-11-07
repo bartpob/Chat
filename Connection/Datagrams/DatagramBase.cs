@@ -22,6 +22,7 @@ namespace Connection.Datagrams
 
         public static DatagramBase Decode(byte[] data)
         {
+            var str = Encoding.UTF8.GetString(data.ToArray());
             var deserialized = JsonSerializer.Deserialize<DatagramBase>(Encoding.UTF8.GetString(data.ToArray()));
 
             return deserialized ?? throw new Exception("Error in data transmission");

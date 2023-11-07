@@ -61,7 +61,7 @@ namespace ChatApplication.ViewModels
 
         private void SendMessageCommandHandler(object? obj)
         {
-            _usersMessages.Add(new Models.Message(_message, MessageType.Outgoing, DateTime.Now));
+            _usersMessages.Add(new Message(_message!, MessageType.Outgoing, DateTime.Now));
             _messageDispatcher.Send(new MessageDatagram(_messageDispatcher.IPAddr, _message, DateTime.Now));
             _message = "";
            OnPropertyChanged(nameof(Message));
@@ -128,7 +128,7 @@ namespace ChatApplication.ViewModels
 
             App.Current.Dispatcher.Invoke((Action)delegate
             {
-                _users.Where(x => x.Address.ToString() == message.FromIPAddr.ToString()).FirstOrDefault().Messages.Add(new Message(
+                _users.Where(x => x.Address.ToString() == message.FromIPAddr.ToString()).FirstOrDefault()!.Messages.Add(new Message(
                     message.Text, MessageType.Incoming, message.Date));
             });
         }
@@ -142,6 +142,7 @@ namespace ChatApplication.ViewModels
             _usersMessages.CollectionChanged += OnCollectionChanged;
             _users = new();
             _messageDispatcher.ReceivedUserState += ReceivedUserStateEventHandler;
+            _messageDispatcher.ReceivedMessage += ReceivedMessageEventHandler;
 
             _messageDispatcher.Run();
         }

@@ -11,6 +11,7 @@ namespace Connection.Datagrams
 {
     public class MessageDatagram : DatagramBase
     {
+
         [JsonConverter(typeof(JsonStringIPAddressConverter))]
         public IPAddress FromIPAddr { get; set; }
         public string Text { get; set; }
@@ -19,9 +20,11 @@ namespace Connection.Datagrams
         public DateTime Date { get; set; }
 
 
-        public MessageDatagram(IPAddress from, string text, DateTime date)
+
+
+        public MessageDatagram(IPAddress fromIPaddr, string text, DateTime date)
         {
-            FromIPAddr = from;
+            FromIPAddr = fromIPaddr;
             Text = text;
             Date = date;
         }

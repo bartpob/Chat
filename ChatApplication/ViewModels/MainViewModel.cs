@@ -58,9 +58,8 @@ namespace ChatApplication.ViewModels
 
         private void SendMessageCommandHandler(object? obj)
         {
-            DateTime Now = DateTime.ParseExact(DateTime.Now.ToString(), "dd/MM/yy hh:mm" ,null);
-            _selectedUser!.Messages.Add(new Message(_message!, MessageType.Outgoing, Now));
-            _messageDispatcher.Send(new MessageDatagram(_messageDispatcher.IPAddr, _message!, Now));
+            _selectedUser!.Messages.Add(new Message(_message!, MessageType.Outgoing,  DateTime.Now));
+            _messageDispatcher.Send(new MessageDatagram(_messageDispatcher.IPAddr, _message!, DateTime.Now));
             _message = "";
            OnPropertyChanged(nameof(Message));
         }

@@ -58,8 +58,9 @@ namespace ChatApplication.ViewModels
 
         private void SendMessageCommandHandler(object? obj)
         {
-            _selectedUser!.Messages.Add(new Message(_message!, MessageType.Outgoing, DateTime.Now));
-            _messageDispatcher.Send(new MessageDatagram(_messageDispatcher.IPAddr, _message!, DateTime.Now));
+            DateTime Now = DateTime.ParseExact(DateTime.Now.ToString(), "dd/MM/yy hh:mm" ,null);
+            _selectedUser!.Messages.Add(new Message(_message!, MessageType.Outgoing, Now));
+            _messageDispatcher.Send(new MessageDatagram(_messageDispatcher.IPAddr, _message!, Now));
             _message = "";
            OnPropertyChanged(nameof(Message));
         }
@@ -75,16 +76,26 @@ namespace ChatApplication.ViewModels
             {
                 if(userState.Status == UserStatus.Online)
                 {
-                    _users[_users.IndexOf(user)] = new User(userState.HostName, userState.IPAddr, user.Messages);
+                    App.Current.Dispatcher.Invoke((Action)delegate
+                    {
+                        _users[_users.IndexOf(user)] = new User(userState.HostName, userState.IPAddr, user.Messages);
+                    });
                 }
                 else
                 {
-                    _users[_users.IndexOf(user)] = new User(user.Name, user.Address, user.Messages, UserStatus.Offline);
+                    App.Current.Dispatcher.Invoke((Action)delegate
+                    {
+                        _users[_users.IndexOf(user)] = new User(user.Name, user.Address, user.Messages, UserStatus.Offline);
+                    });
                 }
             }
             else
             {
-                _users.Add(new User(userState.HostName, userState.IPAddr, new()));
+                App.Current.Dispatcher.Invoke((Action)delegate
+                { 
+                    _users.Add(new User(userState.HostName, userState.IPAddr, new())); 
+                });
+                
             }
         }
 
@@ -94,8 +105,12 @@ namespace ChatApplication.ViewModels
 
             App.Current.Dispatcher.Invoke((Action)delegate
             {
-                _users.Where(x => x.Address.ToString() == message.FromIPAddr.ToString()).FirstOrDefault()!.Messages.Add(new Message(
-                    message.Text, MessageType.Incoming, message.Date));
+                _users.Where(x => x.Address.ToString() == message.FromIPAddr.ToString())
+                .FirstOrDefault()!
+                .Messages
+                .Add(new Message(
+                    message.Text, MessageType.Incoming, message.Date)
+                );
             });
         }
 

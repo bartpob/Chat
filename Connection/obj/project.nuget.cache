@@ -1,8 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "FXRQ51b7m68Hhnm/RBx2liG2cKWXix5D0IL2KyB/3N1WXHcxlWmy2ns3GgCpXLG3/2f9PdAlanaFaNRerX7/qQ==",
+  "dgSpecHash": "LpxTpa97cRciUjK0Ty2zRsWR3h/2p2DvV5wX4uWI3Ty35Qwj945o4RIPs3r25KwQgHtw1yeOzdTOLlblQZN+eA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Bartek\\Documents\\repos\\Chat\\Connection\\Connection.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "C:\\Users\\Bart\\source\\repos\\Chat\\Connection\\Connection.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Bart\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\7.0.15\\microsoft.windowsdesktop.app.ref.7.0.15.nupkg.sha512",
+    "C:\\Users\\Bart\\.nuget\\packages\\microsoft.netcore.app.ref\\7.0.15\\microsoft.netcore.app.ref.7.0.15.nupkg.sha512",
+    "C:\\Users\\Bart\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\7.0.15\\microsoft.aspnetcore.app.ref.7.0.15.nupkg.sha512"
+  ],
   "logs": []
 }

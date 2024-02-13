@@ -10,3 +10,15 @@ C:\Users\Bartek\Documents\repos\Chat\Connection\obj\Debug\net7.0\Connection.dll
 C:\Users\Bartek\Documents\repos\Chat\Connection\obj\Debug\net7.0\refint\Connection.dll
 C:\Users\Bartek\Documents\repos\Chat\Connection\obj\Debug\net7.0\Connection.pdb
 C:\Users\Bartek\Documents\repos\Chat\Connection\obj\Debug\net7.0\ref\Connection.dll
+C:\Users\Bart\source\repos\Chat\Connection\bin\Debug\net7.0\Connection.deps.json
+C:\Users\Bart\source\repos\Chat\Connection\bin\Debug\net7.0\Connection.dll
+C:\Users\Bart\source\repos\Chat\Connection\bin\Debug\net7.0\Connection.pdb
+C:\Users\Bart\source\repos\Chat\Connection\obj\Debug\net7.0\Connection.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Bart\source\repos\Chat\Connection\obj\Debug\net7.0\Connection.AssemblyInfoInputs.cache
+C:\Users\Bart\source\repos\Chat\Connection\obj\Debug\net7.0\Connection.AssemblyInfo.cs
+C:\Users\Bart\source\repos\Chat\Connection\obj\Debug\net7.0\Connection.csproj.CoreCompileInputs.cache
+C:\Users\Bart\source\repos\Chat\Connection\obj\Debug\net7.0\Connection.sourcelink.json
+C:\Users\Bart\source\repos\Chat\Connection\obj\Debug\net7.0\Connection.dll
+C:\Users\Bart\source\repos\Chat\Connection\obj\Debug\net7.0\refint\Connection.dll
+C:\Users\Bart\source\repos\Chat\Connection\obj\Debug\net7.0\Connection.pdb
+C:\Users\Bart\source\repos\Chat\Connection\obj\Debug\net7.0\ref\Connection.dll

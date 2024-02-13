@@ -4,16 +4,16 @@
 winexe
 C#
 .cs
-C:\Users\Bartek\Documents\repos\Chat\ChatApplication\obj\Debug\net7.0-windows\
+C:\Users\Bart\source\repos\Chat\ChatApplication\obj\Debug\net7.0-windows\
 ChatApplication
 none
 false
 TRACE;DEBUG;NET;NET7_0;NETCOREAPP
-C:\Users\Bartek\Documents\repos\Chat\ChatApplication\App.xaml
+C:\Users\Bart\source\repos\Chat\ChatApplication\App.xaml
 6-2108975305
 
 8-334450385
-199344533380
+199608693482
 MainWindow.xaml;Styles\MessagesListBox.xaml;Styles\SendButtonStyle.xaml;Styles\TextBlockMessageStyle.xaml;Styles\TextBoxMessageStyle.xaml;Styles\UsersListBox.xaml;
 
 False

@@ -1,8 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "ZQBqjhcBMqzYzf7Cc2Su3z9BkrnkW9m6UIx02TvyBPxe/gAzR7e9oVub/zS5K6OzTIcIhiCuCJCr7Z0/ofEuSw==",
+  "dgSpecHash": "Zz0yHeeVydbwbYraK0NVhHJdOpbdf+JuDZbMtigG+20wV46niyD2+EbZiqFCrHkjnH9eXRApErQ5kVqbfx+8mg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Bartek\\Documents\\repos\\Chat\\ChatApplication\\ChatApplication.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "C:\\Users\\Bart\\source\\repos\\Chat\\ChatApplication\\ChatApplication.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Bart\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\7.0.15\\microsoft.windowsdesktop.app.ref.7.0.15.nupkg.sha512",
+    "C:\\Users\\Bart\\.nuget\\packages\\microsoft.netcore.app.ref\\7.0.15\\microsoft.netcore.app.ref.7.0.15.nupkg.sha512",
+    "C:\\Users\\Bart\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\7.0.15\\microsoft.aspnetcore.app.ref.7.0.15.nupkg.sha512",
+    "C:\\Users\\Bart\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\7.0.15\\microsoft.netcore.app.host.win-x64.7.0.15.nupkg.sha512"
+  ],
   "logs": []
 }

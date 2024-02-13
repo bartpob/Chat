@@ -27,14 +27,14 @@ namespace Connection.UDP
                 if (leftLen >= _socket.SendBufferSize)
                 {
                     byte[] data = bytesToSend.Skip(sentLen).Take(_socket.SendBufferSize).ToArray();
-                    _socket.SendTo(data, _remoteEP);
+                    _socket.SendTo(data, ep);
                     sentLen += _socket.SendBufferSize;
                     leftLen -= _socket.SendBufferSize;
                 }
                 else
                 {
                     byte[] data = bytesToSend.Skip(sentLen).Take(leftLen).ToArray();
-                    _socket.SendTo(data, _remoteEP);
+                    _socket.SendTo(data, ep);
                     leftLen = 0;
                 }
             }

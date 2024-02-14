@@ -11,7 +11,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
-
+using System.Security.Cryptography;
 namespace ChatApplication.ViewModels
 {
     class MainViewModel : ViewModelBase
@@ -22,7 +22,6 @@ namespace ChatApplication.ViewModels
         private User? _selectedUser;
         private string? _message;
         private ObservableCollection<User> _users;
-
         public ICommand SendMessageCommand { get; }
         public IList<User>? Users => _users;
         public IList<Message>? Messages => _selectedUser?.Messages;
@@ -59,7 +58,10 @@ namespace ChatApplication.ViewModels
         private void SendMessageCommandHandler(object? obj)
         {
             _selectedUser!.Messages.Add(new Message(_message!, MessageType.Outgoing,  DateTime.Now));
-            _messageDispatcher.Send(new MessageDatagram(_messageDispatcher.IPAddr, _message!, DateTime.Now));
+            RSAParameters publicKey = new RSAParameters();
+            publicKey.Modulus = _selectedUser.Modulus;
+            publicKey.Exponent = _selectedUser.Exponent;
+            _messageDispatcher.Send(new MessageDatagram(_messageDispatcher.IPAddr, _message!, DateTime.Now), _selectedUser.Address, publicKey);
             _message = "";
            OnPropertyChanged(nameof(Message));
         }
@@ -77,14 +79,14 @@ namespace ChatApplication.ViewModels
                 {
                     App.Current.Dispatcher.Invoke((Action)delegate
                     {
-                        _users[_users.IndexOf(user)] = new User(userState.HostName, userState.IPAddr, user.Messages);
+                        _users[_users.IndexOf(user)] = new User(userState.HostName, userState.IPAddr, user.Messages, userState.Modulus, userState.Exponent);
                     });
                 }
                 else
                 {
                     App.Current.Dispatcher.Invoke((Action)delegate
                     {
-                        _users[_users.IndexOf(user)] = new User(user.Name, user.Address, user.Messages, UserStatus.Offline);
+                        _users[_users.IndexOf(user)] = new User(user.Name, user.Address, user.Messages, user.Modulus, user.Exponent, UserStatus.Offline);
                     });
                 }
             }
@@ -92,7 +94,7 @@ namespace ChatApplication.ViewModels
             {
                 App.Current.Dispatcher.Invoke((Action)delegate
                 { 
-                    _users.Add(new User(userState.HostName, userState.IPAddr, new())); 
+                    _users.Add(new User(userState.HostName, userState.IPAddr, new(), userState.Modulus, userState.Exponent)); 
                 });
                 
             }

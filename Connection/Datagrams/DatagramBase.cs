@@ -14,10 +14,7 @@ namespace Connection.Datagrams
         public byte[] Encode()
         {
             string serialized = JsonSerializer.Serialize(this, _options);
-            int len = serialized.Length;
-            List<byte> bytes = BitConverter.GetBytes(len).ToList();
-            bytes.AddRange(Encoding.UTF8.GetBytes(serialized));
-            return bytes.ToArray();
+            return Encoding.UTF8.GetBytes(serialized);
         }
 
         public static DatagramBase Decode(byte[] data)

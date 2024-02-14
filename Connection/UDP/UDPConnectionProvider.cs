@@ -10,6 +10,7 @@ namespace Connection.UDP
     {
         private Socket _socket;
         private readonly IPAddress _groupIPAddress = IPAddress.Parse("239.255.255.255");
+        private readonly RSAParameters _rsaParameters;
 
         private readonly int _port = 8181;
         private readonly int _sendBufferSize = 1024;
@@ -24,7 +25,7 @@ namespace Connection.UDP
         public readonly string HostName;
 
         public EventHandler<ReceivedDataEventArgs>? ReceivedData;
-        public UDPConnectionProvider()
+        public UDPConnectionProvider(RSAParameters rsaParameters)
         {
             LocalIPAddress = IPAddress.Parse(GetLocalIPAddress());
             HostName = GetHostName();
@@ -32,7 +33,7 @@ namespace Connection.UDP
             _socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 
             _remoteEP = new IPEndPoint(_groupIPAddress, _port);
-            
+            _rsaParameters = rsaParameters;
             _socket.SetSocketOption(SocketOptionLevel.Udp, SocketOptionName.NoDelay, true);
             _socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
             _socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.MulticastTimeToLive, true);
@@ -41,13 +42,13 @@ namespace Connection.UDP
             _socket.Bind(new IPEndPoint(LocalIPAddress!, _port));
             _socket.SendBufferSize = _sendBufferSize;
             _socket.ReceiveBufferSize = _receiveBufferSize;
-            _udpSender = new UDPSender(_remoteEP, _socket);
-            _udpReceiver = new UDPReceiver(_socket);
+            _udpSender = new UDPSender(_remoteEP, _socket, _rsaParameters);
+            _udpReceiver = new UDPReceiver(_socket, _rsaParameters);
 
             _udpReceiver.ReceivedData += ReceivedDataEventHandler;
         }
 
-        public void Send(DatagramBase datagram, IPAddress? ipAddress = null)
+        public void Send(DatagramBase datagram, IPAddress? ipAddress = null, RSAParameters? publicKey = null)
         {
             if (ipAddress == null)
             {

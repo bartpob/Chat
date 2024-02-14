@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Collections.Generic;
 using Connection.Datagrams;
+using System.Security.Cryptography;
 
 namespace Connection.UDP
 {
@@ -14,10 +15,13 @@ namespace Connection.UDP
         public event EventHandler<ReceivedDataEventArgs>? ReceivedData;
         private readonly Socket _socket;
         private Thread? _listeningThread;
-        public UDPReceiver(Socket socket)
+        private readonly RSAParameters _rsaParameters;
+        public UDPReceiver(Socket socket, RSAParameters rsaParameters)
         {
             _socket = socket;
             StartListening();
+
+            _rsaParameters = rsaParameters;
         }
 
         private void StartListening()

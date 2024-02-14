@@ -16,13 +16,17 @@ namespace Connection.Datagrams
         [JsonConverter(typeof(JsonStringIPAddressConverter))]
         public IPAddress IPAddr { get; set; }
         public string HostName { get; set; }
+        public byte[] Modulus { get; set; }
+        public byte[] Exponent { get; set; }
 
-        public UserStateDatagram(UserStatus status, IPAddress iPAddr, string hostName, AllowingResponse allowingResponse)
+        public UserStateDatagram(UserStatus status, IPAddress iPAddr, string hostName, AllowingResponse allowingResponse, byte[] modulus, byte[] exponent)
         {
             Status = status;
             IPAddr = iPAddr;
             HostName = hostName;
             AllowingResponse = allowingResponse;
+            Modulus = modulus;
+            Exponent = exponent;
         }
     }
 

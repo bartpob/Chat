@@ -11,7 +11,7 @@ using Connection;
 using Connection.UDP;
 using Connection.Datagrams;
 using System.Windows.Navigation;
-
+using System.Security.Cryptography;
 namespace ChatApplication
 {
     /// <summary>
@@ -21,10 +21,16 @@ namespace ChatApplication
     {
         private readonly UDPConnectionProvider _udpConnectionProvider;
         private readonly MessageDispatcher _messageDispatcher;
+        private readonly RSAParameters _rsaParameters;
         public App()
         {
-            _udpConnectionProvider = new();
-            _messageDispatcher = new(_udpConnectionProvider);
+            using(RSACryptoServiceProvider rsa = new RSACryptoServiceProvider())
+            {
+                _rsaParameters = rsa.ExportParameters(true);
+            }
+
+            _udpConnectionProvider = new(_rsaParameters);
+            _messageDispatcher = new(_udpConnectionProvider, _rsaParameters);
         }
 
         protected override void OnStartup(StartupEventArgs e)

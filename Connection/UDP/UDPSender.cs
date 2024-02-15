@@ -22,21 +22,20 @@ namespace Connection.UDP
         public void Send(DatagramBase datagram, IPEndPoint ep, RSAParameters? publicKey = null)
         {
             var bytesToSend = datagram.Encode();
+            byte encrypted = 0;
             if (publicKey != null)
             {
+                encrypted = 1;
                 using (RSACryptoServiceProvider rsa = new RSACryptoServiceProvider())
                 {
                     rsa.ImportParameters(publicKey ?? throw new Exception("publicKey is null"));
                     bytesToSend = rsa.Encrypt(bytesToSend, false);
                 }
             }
-
-
-            List<byte> bytes = bytesToSend.ToList();
-            bytes.Insert(0, (byte)bytes.Count);
+            List<byte> bytes = BitConverter.GetBytes(bytesToSend.Length + 1).ToList();
+            bytes.Add(encrypted);
+            bytes.AddRange(bytesToSend);
             bytesToSend = bytes.ToArray();
-
-
             int leftLen = bytesToSend.Length;
             int sentLen = 0;
 

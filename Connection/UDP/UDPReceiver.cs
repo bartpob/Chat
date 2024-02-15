@@ -57,7 +57,16 @@ namespace Connection.UDP
                     {
                         if(ReceivedData != null)
                         {
-                            var datagram = DatagramBase.Decode(bytes.ToArray());
+                            byte encrypted = bytes.ElementAt(0);
+                            if(encrypted == 1)
+                            {
+                                using (RSACryptoServiceProvider rsa = new RSACryptoServiceProvider())
+                                {
+                                    rsa.ImportParameters(_rsaParameters);
+                                    bytes = rsa.Decrypt(bytes.ToArray(), false).ToList();
+                                }
+                            }
+                            var datagram = DatagramBase.Decode(bytes.Skip(1).ToArray());
                             ReceivedData(this, new(datagram));
                         }
                         bytes.Clear();

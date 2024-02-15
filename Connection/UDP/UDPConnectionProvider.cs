@@ -56,7 +56,7 @@ namespace Connection.UDP
             }
             else
             {
-                _udpSender.Send(datagram, new IPEndPoint(ipAddress, _port));
+                _udpSender.Send(datagram, new IPEndPoint(ipAddress, _port), publicKey);
             }
         }
 

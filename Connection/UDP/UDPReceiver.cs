@@ -63,10 +63,14 @@ namespace Connection.UDP
                                 using (RSACryptoServiceProvider rsa = new RSACryptoServiceProvider())
                                 {
                                     rsa.ImportParameters(_rsaParameters);
-                                    bytes = rsa.Decrypt(bytes.ToArray(), false).ToList();
+                                    bytes = rsa.Decrypt(bytes.Skip(1).ToArray(), false).ToList();
                                 }
                             }
-                            var datagram = DatagramBase.Decode(bytes.Skip(1).ToArray());
+                            else
+                            {
+                                bytes = bytes.Skip(1).ToList();
+                            }
+                            var datagram = DatagramBase.Decode(bytes.ToArray());
                             ReceivedData(this, new(datagram));
                         }
                         bytes.Clear();

@@ -59,14 +59,16 @@ namespace ChatApplication.ViewModels
         {
             _selectedUser!.Messages.Add(new Message(_message!, MessageType.Outgoing,  DateTime.Now));
             RSAParameters publicKey = new RSAParameters();
+
             publicKey.Modulus = _selectedUser.Modulus;
             publicKey.Exponent = _selectedUser.Exponent;
+
             _messageDispatcher.Send(new MessageDatagram(_messageDispatcher.IPAddr, _message!, DateTime.Now), _selectedUser.Address, publicKey);
             _message = "";
            OnPropertyChanged(nameof(Message));
         }
 
-        private bool CanSendMessage(object? obj) => !String.IsNullOrEmpty(_message) && _selectedUser != null;
+        private bool CanSendMessage(object? obj) => !String.IsNullOrEmpty(_message) && _selectedUser != null && _selectedUser.Status == UserStatus.Online;
 
         private void ReceivedUserStateEventHandler(object? sender, ReceivedDataEventArgs e)
         {
@@ -106,7 +108,7 @@ namespace ChatApplication.ViewModels
 
             App.Current.Dispatcher.Invoke((Action)delegate
             {
-                _users.Where(x => x.Address.ToString() == message.FromIPAddr.ToString())
+                _users.Where(user => user.Address.ToString() == message.FromIPAddr.ToString())
                 .FirstOrDefault()!
                 .Messages
                 .Add(new Message(
